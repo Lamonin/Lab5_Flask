@@ -4,28 +4,58 @@
     <title> Приветствие </title>
 </head>
 <body>
-<form action="{{ url_for('hello') }}" method="get">
-    <p>Имя: <input type=text name=username></p>
+<form action="{{ url_for('index') }}" method="post">
+    <p>Имя: <input type=text name=username value="{{ name }}"></p>
     <p>Пол:<br>
-        <input type=radio name=gender value=w> Ж <br>
-        <input type=radio name=gender value=m> M
+        <input type=radio name=gender value=w {% if gender == "w" -%} checked {%- endif -%}> Ж <br>
+        <input type=radio name=gender value=m {% if gender == "m" -%} checked {%- endif -%}> M
     </p>
     <p>
         Образовательная программа:
         <select name=program>
             {% for i in range(len(program_list)) %}
-            <option value={{i}}>{{program_list[i]}}</option>
+                <option value={{ i }} {% if program_list[i] == program -%} selected {%- endif -%}>{{ program_list[i] }}</option>
             {% endfor %}
         </select>
     </p>
     <p>
         Выберите дисциплины, которые Вы изучаете:<br>
         {% for i in range(len(subject_list)) %}
-        <input type=checkbox name=subject[] value={{i}}>
-        {{subject_list[i]}}<br>
+            <input type=checkbox name=subject[] value={{ i }} {% if subject_list[i] in subjects_select -%} checked {%- endif -%}>
+            {{ subject_list[i] }}<br>
         {% endfor %}
     </p>
-    <p><input type=submit value=Отправить> <input onclick="" type=button value=Очистить></p>
+    <p><input type=submit value=Отправить> <input onclick="location.href='{{ url_for('clear') }}'" type=button value=Очистить></p>
 </form>
+{% if values_filled %}
+    {% if name == "" %}
+        Введите имя, пожалуйста!
+    {% else %}
+        <p>
+            Привет,
+            {% if gender == "m" %}
+                студент
+            {% elif gender == "w" %}
+                студентка
+            {% endif %}
+            {{ name }}!
+        </p>
+        <p>
+            Ваша образовательная программа: {{ program }}.
+        </p>
+        <p>
+            {% if len(subjects_select) == 0 %}
+                Вы не изучаете никаких дисциплин.
+            {% else %}
+                Вы изучаете дисциплины:
+                {% for sub in subjects_select %}
+                    {%- if loop.index0 > 0 -%} , {% endif %}
+                    <a href={{ url_for('subject', sub=sub) }}> {{ sub }}</a>
+                {%- endfor -%}
+                .
+            {% endif %}
+        </p>
+    {% endif %}
+{% endif %}
 </body>
 </html>
