@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Векторный калькулятор</title>
+</head>
+<body>
+<form name="vector_size_form" action="{{ url_for('index') }}" method="post">
+    <p>Введите размер векторов:</p>
+    <p>
+        <input name="vector_size" type="number" min="1" value={{ vector_size }}>
+        <input name="vector_size_set" type="submit" value="Показать">
+    </p>
+
+    v1
+    {% for c in v1 %}
+        <input name="vector_1_{{ loop.index0 }}" type="number" value={{ c }}>
+    {% endfor %}
+    <br>
+    v2
+    {% for c in v2 %}
+        <input name="vector_2_{{ loop.index0 }}" type="number" value={{ c }}>
+    {% endfor %}
+
+    <p>Вычислить:</p>
+    {% for i in range(len(ops)) %}
+        <input name="vector_ops" type="checkbox" value={{ i }} {% if i in selected_ops_idx -%} checked {%- endif -%}>
+        {{ ops[i]['chkd_name'] }}
+        <br>
+    {% endfor %}
+    <br>
+
+    <input name="vector_calculate" type="submit" value="Вычислить">
+    <input name="vector_clear_values" type="submit" value="Очистить">
+
+    {% if vector_calculated %}
+        {% if len(calc_res) > 0 %}
+            <p>Результат:</p>
+        {% else %}
+            <p>Для начала выберите хотя бы одну операцию.</p>
+        {% endif %}
+        {% for res in calc_res %}
+            <p>{{- ops[selected_ops_idx[loop.index0]]['res_name'] -}} : {{ res }}</p>
+        {% endfor %}
+    {% endif %}
+</form>
+</body>
+</html>

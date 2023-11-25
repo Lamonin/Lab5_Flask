@@ -25,7 +25,10 @@
             {{ subject_list[i] }}<br>
         {% endfor %}
     </p>
-    <p><input type=submit value=Отправить> <input onclick="location.href='{{ url_for('clear') }}'" type=button value=Очистить></p>
+    <p>
+        <input name="send" type=submit value=Отправить>
+        <input name="clear" type=submit value=Очистить>
+    </p>
 </form>
 {% if values_filled %}
     {% if name == "" %}

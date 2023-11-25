@@ -7,7 +7,10 @@ from flask import render_template, request, redirect, url_for
 def index():
     values_filled = False
     if request.method == 'POST':
-        values_filled = True
+        if 'send' in request.form:
+            values_filled = True
+        elif 'clear' in request.form:
+            return redirect(url_for('index'))
 
     name = request.values.get('username', '')
     gender = request.values.get('gender', '')
@@ -28,8 +31,3 @@ def index():
     )
 
     return html
-
-
-@app.route('/clear', methods=['GET'])
-def clear():
-    return redirect(url_for('index'))
